@@ -5,7 +5,7 @@ require 'mina/extras/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "mina-rails-tools"
-  spec.version       = Mina::Rails::Tools::VERSION
+  spec.version       = Mina::Extras::VERSION
   spec.authors       = ["Joey Lin"]
   spec.email         = ["joeyoooooo@gmail.com"]
 
@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "mina", "0.3.7"
 end
