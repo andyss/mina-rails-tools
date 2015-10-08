@@ -9,18 +9,12 @@ namespace :nginx do
   # desc "Nginx: Setup config files"
   # task :setup => [:upload, :link]
   
-  desc "Parses nginx config file and uploads it to server"
+  desc "Nginx: Parses config file and uploads it to server"
   task :upload do
-    src = custom_conf_path("nginx.conf")
-    
-    if src
-      upload_template src, "#{deploy_to}/shared/nginx.conf"
-    else
-      upload_template 'nginx.conf', "#{deploy_to}/shared/nginx.conf"
-    end
+    upload_shared_file("nginx.conf")
   end
   
-  desc "Symlink config file"
+  desc "Nginx: Symlink config file"
   task :link do
     invoke :sudo
     extra_echo("Nginx: Symlink config file")

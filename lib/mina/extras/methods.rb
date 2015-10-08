@@ -33,14 +33,37 @@ end
 #   queue check_exists(destination)
 # end
 
-def upload_template(tpl, destination)
+def upload_shared_file(filename)
+  src = custom_conf_path(filename)
+  
+  if src
+    upload_template src, "#{deploy_to}/shared/#{filename}"
+  else
+    upload_default_template filename, "#{deploy_to}/shared/#{filename}"
+  end
+end
+
+def upload_template(source, destination)
   desc = File.basename(destination)
   
-  if tpl =~ /erb$/
-    contents = parse_template(tpl)
+  if source =~ /erb$/
+    contents = parse_template(source)
   else
     contents = File.read(source)
   end
+  
+  extra_echo("Put #{desc} file to #{destination}")
+  
+  queue %{echo "#{contents}" > #{destination}}
+  queue check_exists(destination)
+end
+
+def upload_default_template(tpl, destination)
+  desc = File.basename(destination)
+  
+  source = "lib/mina/extras/templates/#{tpl}.erb"
+  
+  contents = parse_template(source)
   
   extra_echo("Put #{desc} file to #{destination}")
   
