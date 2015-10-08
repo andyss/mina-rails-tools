@@ -20,6 +20,9 @@ namespace :unicorn do
   desc "Unicron: startup"
   task :defaults do
     invoke :sudo
+    queue echo_cmd %{sudo chown root:root /etc/init.d/unicorn-#{app!}}
+    queue echo_cmd %{sudo chmod u+x /etc/init.d/unicorn-#{app!}}
+    queue echo_cmd "sudo update-rc.d unicorn-#{app!} defaults"
   end
   
   task :log do
@@ -35,8 +38,8 @@ namespace :unicorn do
     invoke :sudo
     extra_echo("Unicorn: Link script file")
     queue echo_cmd %{sudo cp '#{deploy_to}/shared/config/unicorn_init.sh' '/etc/init.d/unicorn-#{app!}'}
-    queue echo_cmd %{sudo chown #{deploy_user}:#{deploy_user} /etc/init.d/unicorn-#{app!}}
-    queue echo_cmd %{sudo chmod u+x /etc/init.d/unicorn-#{app!}}
+    
+    invoke :"unicorn:defaults"
   end
 
   desc "Start unicorn"
