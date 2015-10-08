@@ -1,13 +1,11 @@
-###########################################################################
-# Unicorn Tasks
-###########################################################################
+require "mina/extras"
 
 namespace :unicorn do
   
-  desc "Relocate unicorn script file"
+  desc "Unicorn: Link script files"
   task :link do
     invoke :sudo
-    queue 'echo "-----> Relocate unicorn script file"'
+    extra_echo("Unicorn: Link script file")
     queue echo_cmd %{sudo cp '#{deploy_to}/shared/config/unicorn_init.sh' '/etc/init.d/unicorn-#{app!}'}
     queue echo_cmd %{sudo chown #{deploy_user}:#{deploy_user} /etc/init.d/unicorn-#{app!}}
     queue echo_cmd %{sudo chmod u+x /etc/init.d/unicorn-#{app!}}
@@ -51,19 +49,19 @@ namespace :unicorn do
 
   desc "Start unicorn"
   task :start do
-    queue 'echo "-----> Start Unicorn"'
+    extra_echo("Unicorn: Start")
     queue echo_cmd "/etc/init.d/unicorn-#{app!} start"
   end
 
   desc "Stop unicorn"
   task :stop do
-    queue 'echo "-----> Stop Unicorn"'
+    extra_echo("Unicorn: Stop")
     queue echo_cmd "/etc/init.d/unicorn-#{app!} stop"
   end
 
   desc "Restart unicorn using 'upgrade'"
   task :restart do
-    queue 'echo "-----> Restart Unicorn"'
+    extra_echo("Unicorn: Restart")
     queue echo_cmd "/etc/init.d/unicorn-#{app!} upgrade"
   end
 
