@@ -1,41 +1,42 @@
 require "mina/extras"
 
-set_default :nginx_available,    "/etc/nginx/sites-available"
-set_default :nginx_enabled,  "/etc/nginx/sites-enabled"
+set_default :nginx_conf_path, "/etc/nginx/sites-enabled"
+set_default :nginx_port, 80
+set_default :nginx_default, false
 
 namespace :nginx do
-  # desc "Create configuration and other files"
-  # task :setup do
-  #   invoke :sudo
-  #   queue echo_cmd "mkdir -p #{nginx_log_path}"
-  #   queue echo_cmd "sudo chown #{nginx_user}:#{nginx_group} #{nginx_log_path}"
-  # end
+    
+  # desc "Nginx: Setup config files"
+  # task :setup => [:upload, :link]
   
-  desc "Nginx: Setup config files"
-  task :setup => [:upload, :link]
+  desc "Parses nginx config file and uploads it to server"
+  task :upload do
+    src = custom_conf_path("nginx.conf")
+    
+    if src
+      upload_template src, "#{deploy_to}/shared/nginx.conf"
+    else
+      upload_template 'nginx.conf', "#{deploy_to}/shared/nginx.conf"
+    end
+  end
   
   desc "Symlink config file"
   task :link do
     invoke :sudo
     extra_echo("Nginx: Symlink config file")
     
-    queue echo_cmd %{sudo ln -fs "#{deploy_to}/shared/config/nginx.conf" "#{nginx_available}/#{app!}.conf"}
-    # queue check_symlink nginx_available
-    queue echo_cmd %{sudo ln -fs "#{deploy_to}/shared/config/nginx.conf" "#{nginx_enabled}/#{app!}.conf"}
-    # queue check_symlink nginx_enabled
+    queue echo_cmd %{sudo ln -fs "#{deploy_to}/shared/nginx.conf" "#{nginx_conf_path}/#{app!}.conf"}
+    # queue check_symlink nginx_conf_path
   end
-
-  desc "Parses nginx config file and uploads it to server"
-  task :upload do
-    upload_template 'nginx config', 'nginx.conf', "#{config_path}/nginx.conf"
-  end
-  
-  desc "Parses config file and outputs it to STDOUT (local task)"
-  task :parse do
-    puts "#"*80
-    puts "# nginx.conf"
-    puts "#"*80
-    puts erb("#{config_templates_path}/nginx.conf.erb")
+    
+  desc "Current nginx config"
+  task :config do
+    invoke :sudo
+    
+    queue_echo("#"*80)
+    queue_echo("# File: #{nginx_conf_path}/#{app!}.conf")
+    queue %{sudo cat "#{nginx_conf_path}/#{app!}.conf"}
+    queue_echo("#"*80)
   end
   
   %w(stop start restart reload status).each do |action|

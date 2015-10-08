@@ -1,7 +1,7 @@
 require "mina/extras/version"
 require "mina/extras/methods"
 require "mina/extras/system"
-require "mina/extras/helpers"
+require "mina/extras/extra"
 
 module Mina
   module Extras
