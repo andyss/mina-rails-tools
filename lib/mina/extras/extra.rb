@@ -17,6 +17,8 @@ task :setup => :environment  do
   invoke :"extra:create_shared_paths"  
   invoke :"extra:upload"
   
+  invoke :"nginx:upload"
+  
   if use_unicorn
     invoke :'unicorn:upload'
     

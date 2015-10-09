@@ -1,24 +1,13 @@
-<%
-# Sample simple conf
-# working_directory "/vagrant"
-# pid "/vagrant/tmp/pids/unicorn.pid"
-# stderr_path "/vagrant/log/unicorn.log"
-# stdout_path "/vagrant/log/unicorn.log"
-# listen "/tmp/unicorn.photoapp.sock"
-# worker_processes 2
-# timeout 30
-%>
-
 rails_root = "<%= "#{deploy_to!}/#{current_path!}" %>"
-rails_env  = "<%= rails_env %>"
-pid_file   = "<%= unicorn_pid %>"
-socket_file= "<%= unicorn_socket %>"
+rails_env  = "<%= rails_env || "production" %>"
+pid_file   = "<%= "#{deploy_to!}/#{shared_path}" %>/pids/unicorn.pid"
+socket_file= "/tmp/unicorn.<%= app! %>.socket"
 log_file   = "<%= "#{deploy_to!}/#{shared_path}" %>/log/unicorn.log"
 err_log    = "<%= "#{deploy_to!}/#{shared_path}" %>/log/unicorn.error.log"
 old_pid    = pid_file + '.oldbin'
 
 timeout 60
-worker_processes <%= unicorn_workers %>
+worker_processes <%= unicorn_workers || 2 %>
 
 # Listen on a Unix data socket
 listen socket_file, :backlog => 2048
