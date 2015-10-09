@@ -56,7 +56,7 @@ def append_template(source, destination)
   
   extra_echo("Put #{desc} file to #{destination}")
   
-  queue %{echo '#{contents}' >> #{destination}}
+  queue %{echo "#{contents}" >> #{destination}}
   queue check_exists(destination)
 end
 
@@ -71,7 +71,7 @@ def upload_template(source, destination)
   
   extra_echo("Put #{desc} file to #{destination}")
   
-  queue %{echo '#{contents}' > #{destination}}
+  queue %{echo "#{contents}" > #{destination}}
   queue check_exists(destination)
 end
 
@@ -84,7 +84,7 @@ def upload_default_template(tpl, destination)
   
   extra_echo("Put #{desc} file to #{destination}")
   
-  queue %{echo '#{contents}' > #{destination}}
+  queue %{echo "#{contents}" > #{destination}}
   queue check_exists(destination)
 end
 
