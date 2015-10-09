@@ -5,3 +5,7 @@ end
 task :uptime do
   queue 'uptime'
 end
+
+task :gp do
+  queue echo_cmd "ps aux | grep #{ENV["p"]}"
+end

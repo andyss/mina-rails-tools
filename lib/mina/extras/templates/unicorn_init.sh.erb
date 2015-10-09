@@ -3,7 +3,7 @@ set -e
 
 TIMEOUT=60
 APP_ROOT="<%= "#{deploy_to!}/#{current_path!}" %>"
-PID="<%= unicorn_pid %>"
+PID="$APP_ROOT/tmp/pids/unicorn.pid"
 ENVIRONMENT="<%= rails_env %>"
 CONFIG="<%= unicorn_config %>"
 # CMD="cd $APP_ROOT && rvm use 1.9.3 && /usr/local/bin/unicorn_rails -D -c $APP_ROOT/$CONFIG -E $ENVIRONMENT"

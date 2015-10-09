@@ -1,5 +1,3 @@
-require "mina/extras/platforms/ubuntu"
-
 set_default :platform, :ubuntu
 set_default :webserver, :unicorn
 

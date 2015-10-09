@@ -25,6 +25,12 @@ namespace :unicorn do
     queue echo_cmd "sudo update-rc.d unicorn-#{app!} defaults"
   end
   
+  task :god do
+    invoke :sudo
+    upload_shared_file("unicorn.god")
+    invoke :"god:restart"
+  end
+  
   task :log do
     queue %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.log" -n 200}    
   end
@@ -39,7 +45,7 @@ namespace :unicorn do
     extra_echo("Unicorn: Link script file")
     queue echo_cmd %{sudo cp '#{deploy_to}/shared/config/unicorn_init.sh' '/etc/init.d/unicorn-#{app!}'}
     
-    invoke :"unicorn:defaults"
+    # invoke :"unicorn:defaults"
   end
 
   desc "Start unicorn"

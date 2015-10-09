@@ -1,6 +1,6 @@
-# def mv_config(source, destination)
-#   queue %{mv #{deploy_to}/shared/config/#{source} #{deploy_to}/shared/config/#{destination}}
-# end
+def mv_config(source, destination)
+  queue %{mv #{deploy_to}/shared/config/#{source} #{deploy_to}/shared/config/#{destination}}
+end
 
 def extra_echo(desc)
   queue "echo '--------> #{desc}'"
@@ -25,14 +25,6 @@ def scp_file(desc, source, destination)
   end
 end
 
-# def upload_file(desc, source, destination)
-#   contents = File.read(source)
-#   extra_echo("Put #{desc} file to #{destination}")
-# 
-#   queue %{echo "#{contents}" > #{destination}}
-#   queue check_exists(destination)
-# end
-
 def upload_shared_file(filename)
   src = custom_conf_path(filename)
   
@@ -41,6 +33,31 @@ def upload_shared_file(filename)
   else
     upload_default_template filename, "#{deploy_to}/shared/#{filename}"
   end
+end
+
+def upload_file(filename, destination)
+  src = custom_conf_path(filename)
+  
+  if src
+    upload_template src, destination
+  else
+    upload_default_template filename, destination
+  end
+end
+
+def append_template(source, destination)
+  desc = File.basename(destination)
+  
+  if source =~ /erb$/
+    contents = parse_template(source)
+  else
+    contents = File.read(source)
+  end
+  
+  extra_echo("Put #{desc} file to #{destination}")
+  
+  queue %{echo "#{contents}" >> #{destination}}
+  queue check_exists(destination)
 end
 
 def upload_template(source, destination)
@@ -148,20 +165,6 @@ def queue_echo(s)
   queue %{echo '#{s}'}
 end
 
-# Allow to run some tasks as different (sudoer) user when sudo required
-module Mina
-  module Helpers
-    def ssh_command
-      args = domain!
-      args = if sudo? && sudoer?
-               "#{sudoer}@#{args}"
-             elsif user?
-               "#{user}@#{args}"
-             end
-      args << " -i #{identity_file}" if identity_file?
-      args << " -p #{port}" if port?
-      args << " -t"
-      "ssh #{args}"
-    end
-  end
+def check_file_exist?(file)
+  File.exist?(file)
 end

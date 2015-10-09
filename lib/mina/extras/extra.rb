@@ -2,8 +2,14 @@ require "mina/extras"
 
 set_default :sudoer, "root"
 task :sudo do
-  set :user, sudoer
+  # set :user, sudoer
   set :sudo, true
+  set :term_mode, :system
+end
+
+task :user do
+  # set :user, user
+  set :sudo, false
   set :term_mode, :system
 end
 
@@ -11,13 +17,8 @@ task :setup => :environment  do
   invoke :"extra:create_shared_paths"  
   invoke :"extra:upload"
   
-  # invoke :create_extra_paths
-  # invoke :'dbconfig:upload'
-  # invoke :'unicorn:upload'
-  # invoke :'god:setup'
-  # invoke :'god:upload'
-  # invoke :'unicorn:upload'
-  # invoke :'nginx:upload'      
+  queue %{echo "-----> (!!!) You now need to run 'mina sudoer_setup' to run the parts that require sudoer user (!!!)"}
+  
   # if sudoer?
   #   queue %{echo "-----> (!!!) You now need to run 'mina sudoer_setup' to run the parts that require sudoer user (!!!)"}
   # else
@@ -25,7 +26,6 @@ task :setup => :environment  do
   # end
 end
 
-# namespace :env do
 task :sudoer_setup do
   invoke :sudo
   invoke :'unicorn:link'
@@ -33,20 +33,7 @@ task :sudoer_setup do
   invoke :'nginx:restart'
 end
 
-# desc 'Create extra paths for shared configs, pids, sockets, etc.'
-# task :create_extra_paths do
-#   extra_echo("Create shared paths")
-#   
-#   shared_dirs = create_paths.map { |file| File.join("#{deploy_to}/#{shared_path}/", file) }.uniq  
-#   cmds = shared_dirs.map do |dir|
-#     queue echo_cmd %{mkdir -p "#{dir}"}
-#   end
-#   
-#   queue "touch #{deploy_to}/#{shared_path}/pids/unicorn.pid"
-# end
-
 namespace :extra do
-  
   task :create_shared_paths do
     folders = shared_paths.map do |path|
       path.gsub(/\/\S+\.\S+\Z/, "")
@@ -65,6 +52,34 @@ namespace :extra do
       next if File.file?(path)
 
       upload_shared_folder(path, base)        
+    end
+  end
+end
+
+
+# Allow to run some tasks as different (sudoer) user when sudo required
+module Mina
+  module SshHelpers
+    def ssh_command
+      args = domain!
+      args = if settings[:sudo] && sudoer?
+               "#{sudoer}@#{args}"
+             elsif user?
+               "#{user}@#{args}"
+             end
+      args << " -i #{identity_file}" if identity_file?
+      args << " -p #{port}" if port?
+      args << " -t"
+      "ssh #{args}"
+    end
+  end
+end
+
+
+module Mina
+  module Helpers
+    def clean_commands!
+      @commands = nil
     end
   end
 end
