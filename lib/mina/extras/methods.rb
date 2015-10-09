@@ -56,7 +56,15 @@ def append_template(source, destination)
   
   extra_echo("Put #{desc} file to #{destination}")
   
-  queue %{echo "#{contents}" >> #{destination}}
+  script = <<EOF
+script=$(cat <<'EOFF'
+#{contents}
+EOFF
+)
+EOF
+
+  queue %{#{script}}
+  queue %{echo "$script" >> #{destination}}
   queue check_exists(destination)
 end
 
@@ -66,12 +74,20 @@ def upload_template(source, destination)
   if source =~ /erb$/
     contents = parse_template(source)
   else
-    contents = File.read(source)
+    contents = parse_template(source)
   end
   
   extra_echo("Put #{desc} file to #{destination}")
   
-  queue %{echo "#{contents}" > #{destination}}
+  script = <<EOF
+script=$(cat <<'EOFF'
+#{contents}
+EOFF
+)
+EOF
+
+  queue %{#{script}}
+  queue %{echo "$script" > #{destination}}
   queue check_exists(destination)
 end
 
@@ -84,7 +100,15 @@ def upload_default_template(tpl, destination)
   
   extra_echo("Put #{desc} file to #{destination}")
   
-  queue %{echo "#{contents}" > #{destination}}
+  script = <<EOF
+script=$(cat <<'EOFF'
+#{contents}
+EOFF
+)
+EOF
+
+  queue %{#{script}}
+  queue %{echo "$script" > #{destination}}
   queue check_exists(destination)
 end
 
@@ -103,7 +127,7 @@ def upload_shared_folder(folder, base)
 end
 
 def parse_template(file)
-  erb(file).gsub('"','\\"').gsub('`','\\\\`').gsub('$','\\\\$')
+  erb(file)
 end
 
 def check_response

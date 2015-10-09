@@ -62,6 +62,15 @@ namespace :extra do
   end
   
   task :upload do
+    base = File.join(Dir.pwd, "config", "deploy", "shared")
+    
+    Dir[File.join(base, "*")].map do |path|
+      # File.directory?
+      next if File.file?(path)
+
+      upload_shared_folder(path, base)        
+    end
+    
     base = File.join(Dir.pwd, "config", "deploy", "#{server}")
     
     Dir[File.join(base, "*")].map do |path|

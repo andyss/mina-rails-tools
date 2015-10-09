@@ -9,7 +9,7 @@ PID="$PID_PATH/unicorn.pid"
 ENVIRONMENT="<%= rails_env || "production" %>"
 CONFIG="$APP_ROOT/<%= "#{shared_path!}/unicorn.rb" %>"
 UARGS="-D -c $CONFIG -E $ENVIRONMENT"
-CMD="sh -c \"cd $APP_ROOT/<%= current_path! %> && bundle exec unicorn_rails $UARGS\" - $AS_USER"
+CMD="cd $APP_ROOT/<%= current_path! %> && bundle exec unicorn_rails $UARGS"
 action="$1"
 #set -u
 
@@ -31,7 +31,7 @@ workersig () {
 case $action in
 start)
   sig 0 && echo >&2 "Already running" && exit 0
-  $CMD && echo "start ok" && exit 0
+  su -c "$CMD" - $AS_USER && echo "start ok" && exit 0
   ;;
 stop)
   sig QUIT && echo "stop ok" && exit 0
@@ -44,12 +44,12 @@ force-stop)
 restart|reload)
   sig HUP && echo "reloaded OK" && exit 0
   echo >&2 "Error: start $CMD instead"
-  $CMD
+  su -c "$CMD" - $AS_USER
   ;;
 upgrade)
   sig USR2 && echo Upgraded && exit 0
   echo >&2 "Error: start $CMD instead"
-  $CMD
+  su -c "$CMD" - $AS_USER
   ;;
 kill_worker)
   workersig QUIT $2 && exit 0
