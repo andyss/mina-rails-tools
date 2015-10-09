@@ -7,7 +7,7 @@ unicorn_pid = "<%= "#{deploy_to!}/shared/pids/unicorn.pid" %>"
 
 God.pid_file_directory = File.join("<%= deploy_to! %>", "shared", "pid")
 God.watch do |w|
-  w.name = "unicorn"
+  w.name = "unicorn_<%= "#{app!}" %>"
   w.interval = 30.seconds # default
 
   # unicorn needs to be run from the rails root

@@ -17,6 +17,14 @@ task :setup => :environment  do
   invoke :"extra:create_shared_paths"  
   invoke :"extra:upload"
   
+  if use_unicorn
+    invoke :'unicorn:upload'
+    
+    if use_god
+      invoke :'unicorn:god:upload'
+    end
+  end
+  
   queue %{echo "-----> (!!!) You now need to run 'mina sudoer_setup' to run the parts that require sudoer user (!!!)"}
   
   # if sudoer?
@@ -28,9 +36,16 @@ end
 
 task :sudoer_setup do
   invoke :sudo
-  invoke :'unicorn:link'
   invoke :'nginx:link'
   invoke :'nginx:restart'
+  
+  if use_unicorn
+    invoke :'unicorn:link'
+    
+    if use_god
+      invoke :'unicorn:god:link'
+    end
+  end 
 end
 
 namespace :extra do

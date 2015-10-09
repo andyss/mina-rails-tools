@@ -5,6 +5,8 @@ set_default :god_service_path, "/etc/init.d"
 set_default :god_pid_path, "/var/run"
 set_default :god_log_path, "/var/log"
 
+set :use_god, true
+
 namespace :god do
 
   task :setup do
