@@ -56,7 +56,7 @@ def append_template(source, destination)
   
   extra_echo("Put #{desc} file to #{destination}")
   
-  queue %{echo "#{contents}" >> #{destination}}
+  queue %{echo '#{contents}' >> #{destination}}
   queue check_exists(destination)
 end
 
@@ -71,20 +71,20 @@ def upload_template(source, destination)
   
   extra_echo("Put #{desc} file to #{destination}")
   
-  queue %{echo "#{contents}" > #{destination}}
+  queue %{echo '#{contents}' > #{destination}}
   queue check_exists(destination)
 end
 
 def upload_default_template(tpl, destination)
   desc = File.basename(destination)
   
-  source = "lib/mina/extras/templates/#{tpl}.erb"
+  source = File.join(File.dirname(__FILE__), "templates", "#{tpl}.erb")
   
   contents = parse_template(source)
   
   extra_echo("Put #{desc} file to #{destination}")
   
-  queue %{echo "#{contents}" > #{destination}}
+  queue %{echo '#{contents}' > #{destination}}
   queue check_exists(destination)
 end
 

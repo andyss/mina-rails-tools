@@ -25,10 +25,16 @@ namespace :unicorn do
     queue echo_cmd "sudo update-rc.d unicorn-#{app!} defaults"
   end
   
-  task :god do
-    invoke :sudo
-    upload_shared_file("unicorn.god")
-    invoke :"god:restart"
+  namespace :god do
+    task :upload do
+      upload_shared_file("unicorn.god")
+    end
+    
+    task :link do
+      invoke :sudo
+      queue echo_cmd %{sudo cp -rf #{deploy_to}/#{shared_path}/unicorn.god #{god_path}/conf/unicorn-#{app!}.god}
+      invoke :"god:restart"
+    end
   end
   
   task :log do

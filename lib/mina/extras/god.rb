@@ -39,7 +39,7 @@ namespace :god do
     task action.to_sym do
       invoke :sudo
       queue %{echo "-----> #{action.capitalize} God"}
-      queue echo_cmd "#{god_service_path}/god #{action}"
+      queue echo_cmd "sudo #{god_service_path}/god #{action}"
     end
   end
   
