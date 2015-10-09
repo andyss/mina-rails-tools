@@ -60,30 +60,27 @@ namespace :unicorn do
     invoke :sudo
     extra_echo("Unicorn: Link script file")
     queue echo_cmd %{sudo cp '#{deploy_to}/shared/unicorn_init.sh' '/etc/init.d/unicorn-#{app!}'}
-    queue echo_cmd %{sudo chown root:root /etc/init.d/unicorn-#{app!}}
+    queue echo_cmd %{sudo chown #{user!}:#{group!} /etc/init.d/unicorn-#{app!}}
     queue echo_cmd %{sudo chmod u+x /etc/init.d/unicorn-#{app!}}
     # invoke :"unicorn:defaults"
   end
 
   desc "Start unicorn"
   task :start do
-    invoke :sudo
     extra_echo("Unicorn: Start")
-    queue echo_cmd "sudo /etc/init.d/unicorn-#{app!} start"
+    queue echo_cmd "/etc/init.d/unicorn-#{app!} start"
   end
 
   desc "Stop unicorn"
   task :stop do
-    invoke :sudo
     extra_echo("Unicorn: Stop")
-    queue echo_cmd "sudo /etc/init.d/unicorn-#{app!} stop"
+    queue echo_cmd "/etc/init.d/unicorn-#{app!} stop"
   end
 
   desc "Restart unicorn using 'upgrade'"
   task :restart do
-    invoke :sudo
     extra_echo("Unicorn: Restart")
-    queue echo_cmd "sudo /etc/init.d/unicorn-#{app!} upgrade"
+    queue echo_cmd "/etc/init.d/unicorn-#{app!} upgrade"
   end
 
 end
