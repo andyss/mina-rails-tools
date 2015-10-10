@@ -21,8 +21,8 @@ task :start do
   invoke :"osx:remote:setup"
   invoke :"osx:locale:setup"
   invoke :"osx:install:prepare"
-  mina_cleanup!
   
+  mina_cleanup!
   clean_commands!
   
   invoke :user
