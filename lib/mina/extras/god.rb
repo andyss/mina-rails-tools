@@ -17,6 +17,7 @@ namespace :god do
   
   task :link do
     extra_echo "Relocate god script file"
+    queue echo_cmd %{sudo rm -rf "#{god_service_path}/god"}
     queue echo_cmd %{sudo cp "#{god_path}/god.sh" "#{god_service_path}/god"}
     queue echo_cmd %{sudo chown #{god_user}:#{god_group} "#{god_service_path}/god"}
     queue echo_cmd %{sudo chmod u+x "#{god_service_path}/god"}

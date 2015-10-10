@@ -10,12 +10,11 @@ RETVAL=0
 GOD_PID="<%= god_pid_path %>/god.pid"
 GOD_LOG="<%= god_log_path %>/god.log"
 GOD_CONF="<%= god_path %>/global.god"
-GOD_BIN="god"
+GOD_BIN="/usr/local/bin/god"
 
 case "$1" in
     start)
-      $GOD_BIN -P $GOD_PID -l $GOD_LOG
-      $GOD_BIN load $GOD_CONF
+      $GOD_BIN -c $GOD_CONF -P $GOD_PID -l $GOD_LOG
       RETVAL=$?
       ;;
     stop)
@@ -24,8 +23,7 @@ case "$1" in
       ;;
     restart)
       kill `cat $GOD_PID`
-      $GOD_BIN -P $GOD_PID -l $GOD_LOG
-      $GOD_BIN load $GOD_CONF
+      $GOD_BIN -c $GOD_CONF -P $GOD_PID -l $GOD_LOG
       RETVAL=$?
       ;;
     status)

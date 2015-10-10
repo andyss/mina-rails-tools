@@ -2,25 +2,21 @@
 
 rails_env = "production"
 rails_root = "<%= "#{deploy_to!}/#{current_path!}" %>"
-shared_root = "<%= "#{deploy_to!}/shared" %>"
-unicorn_pid = "<%= "#{deploy_to!}/shared/pids/unicorn.pid" %>"
+shared_root = "<%= "#{deploy_to!}/#{shared_path!}" %>"
+config = "#{shared_root}/unicorn.rb"
+unicorn_pid = "<%= "#{deploy_to!}/#{shared_path!}/pids/unicorn.pid" %>"
 
-God.pid_file_directory = File.join("<%= deploy_to! %>", "shared", "pid")
+# God.pid_file_directory = File.join("<%= deploy_to! %>", "shared", "pids")
 God.watch do |w|
   w.name = "unicorn_<%= "#{app!}" %>"
   w.interval = 30.seconds # default
 
-  # unicorn needs to be run from the rails root
-  # w.start = "cd #{rails_root} && /usr/local/bin/unicorn_rails -c #{rails_root}/config/unicorn.rb -E #{rails_env} -D"
-  # bundle exec unicorn -D -c $APP_ROOT/$CONFIG -E $ENVIRONMENT
-  w.start = "cd #{rails_root} && bundle exec unicorn_rails -D -c #{shared_root}/unicorn.rb -E #{rails_env}"
+  w.start = "cd #{rails_root} && /usr/local/bin/bundle exec unicorn_rails -D -c #{config} -E #{rails_env}"
 
   # QUIT gracefully shuts down workers
-  # w.stop = "kill -QUIT `cat #{rails_root}/tmp/pids/unicorn.pid`"
   w.stop = "kill -QUIT `cat #{unicorn_pid}`"
 
   # USR2 causes the master to re-create itself and spawn a new worker pool
-  # w.restart = "kill -USR2 `cat #{rails_root}/tmp/pids/unicorn.pid`"
   w.restart = "kill -USR2 `cat #{unicorn_pid}`"
 
   w.start_grace = 30.seconds
