@@ -16,12 +16,12 @@ namespace :god do
   task :link do
     extra_echo "Relocate god script file"
     queue echo_cmd %{sudo rm -rf "#{god_service_path}/god"}
-    invoke :"god:setup"
-    invoke :"god:tmp_add_permission"
+    queue echo_cmd "sudo mkdir -p #{god_path}/conf"
+    queue echo_cmd "sudo chown -R #{user} #{god_path}"
     queue echo_cmd %{sudo cp "#{god_path}/god.sh" "#{god_service_path}/god"}
     queue echo_cmd %{sudo chown #{god_user}:#{god_group} "#{god_service_path}/god"}
     queue echo_cmd %{sudo chmod +x "#{god_service_path}/god"}
-    invoke :"god:set_permission"
+    queue echo_cmd "sudo chown -R #{god_user}:#{god_group} #{god_path}"
     queue echo_cmd "sudo update-rc.d god defaults"
   end
   
@@ -37,17 +37,17 @@ namespace :god do
   
   namespace :upload do
     task :script do
-      invoke :"god:setup"
-      invoke :"god:tmp_add_permission"
+      queue echo_cmd "sudo mkdir -p #{god_path}/conf"
+      queue echo_cmd "sudo chown -R #{user} #{god_path}"
       upload_file "god.sh", "#{god_path}/god.sh"
-      invoke :"god:set_permission"
+      queue echo_cmd "sudo chown -R #{god_user}:#{god_group} #{god_path}"
     end
 
     task :global do
-      invoke :"god:setup"
-      invoke :"god:tmp_add_permission"
+      queue echo_cmd "sudo mkdir -p #{god_path}/conf"
+      queue echo_cmd "sudo chown -R #{user} #{god_path}"
       upload_file 'global.god', "#{god_path}/global.god"
-      invoke :"god:set_permission"
+      queue echo_cmd "sudo chown -R #{god_user}:#{god_group} #{god_path}"
     end    
   end
   
