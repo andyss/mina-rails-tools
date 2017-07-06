@@ -4,11 +4,11 @@ upstream unicorn-<%= app %> {
 
 # <%= app %> Server
 server {
-  listen <%= nginx_port %><%= ' default' if nginx_default %>;
-  server_name <%= domain %>;
+  listen <%= fetch(:nginx_port) %><%= ' default' if fetch(:nginx_default) %>;
+  server_name <%= fetch(:domain) %>;
 
-  root <%= fetch(:deploy_to) %>/<%= current_path %>/public;
-  
+  root <%= fetch(:deploy_to) %>/<%= fetch(:current_path) %>/public;
+
   gzip on;
   gzip_types text/plain text/xml application/xml application/xml+rss
              text/css text/javascript application/javascript application/json;
