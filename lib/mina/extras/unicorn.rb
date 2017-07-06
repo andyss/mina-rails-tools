@@ -3,84 +3,84 @@ require "mina/extras"
 set :use_unicorn, true
 
 namespace :unicorn do
-  
+
   desc "Unicorn: Parses config file and uploads it to server"
   task :upload => [:'upload:config', :'upload:script']
-  
+
   namespace :upload do
     desc "Parses Unicorn config file and uploads it to server"
     task :config do
       upload_shared_file("unicorn.rb")
     end
-  
+
     desc "Parses Unicorn control script file and uploads it to server"
     task :script do
       upload_shared_file("unicorn_init.sh")
     end
   end
-  
+
   desc "Unicron: startup"
   task :defaults do
     invoke :sudo
-    command echo_cmd "sudo update-rc.d unicorn-#{app!} defaults"
+    command echo_cmd "sudo update-rc.d unicorn-#{fetch(:app)} defaults"
   end
-  
+
   namespace :god do
     task :upload do
       upload_shared_file("unicorn.god")
     end
-    
+
     task :link do
       invoke :sudo
-      command echo_cmd %{sudo cp -rf #{deploy_to}/#{shared_path}/unicorn.god #{god_path}/conf/unicorn-#{app!}.god}
+      command echo_cmd %{sudo cp -rf #{deploy_to}/#{shared_path}/unicorn.god #{god_path}/conf/unicorn-#{fetch(:app)}.god}
       invoke :"god:restart"
     end
-    
+
     task :start do
       invoke :sudo
-      command echo_cmd %{sudo god start unicorn_#{app!}}
+      command echo_cmd %{sudo god start unicorn_#{fetch(:app)}}
     end
-    
+
     task :stop do
       invoke :sudo
-      command echo_cmd %{sudo god stop unicorn_#{app!}}
-    end    
+      command echo_cmd %{sudo god stop unicorn_#{fetch(:app)}}
+    end
   end
-  
+
   task :log do
-    command %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.log" -n 200}    
+    command %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.log" -n 200}
   end
-  
+
   task :err_log do
-    command %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.error.log" -n 200}    
+    command %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.error.log" -n 200}
   end
 
   desc "Unicorn: Link script files"
   task :link do
     invoke :sudo
     extra_echo("Unicorn: Link script file")
-    command echo_cmd %{sudo cp '#{deploy_to}/shared/unicorn_init.sh' '/etc/init.d/unicorn-#{app!}'}
-    command echo_cmd %{sudo chown #{user!}:#{group!} /etc/init.d/unicorn-#{app!}}
-    command echo_cmd %{sudo chmod u+x /etc/init.d/unicorn-#{app!}}
+    command echo_cmd %{sudo cp '#{deploy_to}/shared/unicorn_init.sh' '/etc/init.d/unicorn-#{fetch(:app)}'}
+    command echo_cmd %{sudo chown #{user!}:#{group!} /etc/init.d/unicorn-#{fetch(:app)}}
+    command echo_cmd %{sudo chmod u+x /etc/init.d/unicorn-#{fetch(:app)}}
     # invoke :"unicorn:defaults"
   end
 
   desc "Start unicorn"
   task :start do
     extra_echo("Unicorn: Start")
-    command echo_cmd "/etc/init.d/unicorn-#{app!} start"
+    command echo_cmd "/etc/init.d/unicorn-#{fetch(:app)} start"
   end
 
   desc "Stop unicorn"
   task :stop do
     extra_echo("Unicorn: Stop")
-    command echo_cmd "/etc/init.d/unicorn-#{app!} stop"
+    command echo_cmd "/etc/init.d/unicorn-#{fetch(:app)} stop"
   end
 
   desc "Restart unicorn using 'upgrade'"
   task :restart do
     extra_echo("Unicorn: Restart")
-    command echo_cmd "/etc/init.d/unicorn-#{app!} upgrade"
+    command echo_cmd "/etc/init.d/unicorn-#{fetch(:app)} upgrade"
   end
 
 end

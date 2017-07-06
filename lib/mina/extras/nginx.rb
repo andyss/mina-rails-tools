@@ -19,7 +19,7 @@ namespace :nginx do
     invoke :sudo
     extra_echo("Nginx: Symlink config file")
     
-    command echo_cmd %{sudo ln -fs "#{deploy_to}/shared/nginx.conf" "#{nginx_conf_path}/#{app!}.conf"}
+    command echo_cmd %{sudo ln -fs "#{deploy_to}/shared/nginx.conf" "#{nginx_conf_path}/#{fetch(:app)}.conf"}
     # command check_symlink nginx_conf_path
   end
     
@@ -28,8 +28,8 @@ namespace :nginx do
     invoke :sudo
     
     command_echo("#"*80)
-    command_echo("# File: #{nginx_conf_path}/#{app!}.conf")
-    command %{sudo cat "#{nginx_conf_path}/#{app!}.conf"}
+    command_echo("# File: #{nginx_conf_path}/#{fetch(:app)}.conf")
+    command %{sudo cat "#{nginx_conf_path}/#{fetch(:app)}.conf"}
     command_echo("#"*80)
   end
   
