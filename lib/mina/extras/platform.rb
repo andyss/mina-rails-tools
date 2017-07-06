@@ -1,5 +1,5 @@
-set_default :platform, :ubuntu
-set_default :webserver, :unicorn
+set :platform, :ubuntu
+set :webserver, :unicorn
 
 namespace :platform do
   desc 'List support platforms'

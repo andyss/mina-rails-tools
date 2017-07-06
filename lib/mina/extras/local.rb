@@ -1,5 +1,5 @@
-# set_default :ssh_pub_key_path, "/home/"
-# set_default :ssh_key_path, "/home/"
+# set :ssh_pub_key_path, "/home/"
+# set :ssh_key_path, "/home/"
 # 
 namespace :local do
   task :check_ssh_key do

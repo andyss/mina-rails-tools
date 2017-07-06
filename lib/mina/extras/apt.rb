@@ -1,4 +1,4 @@
-set_default :apt_source, :us
+set :apt_source, :us
 
 def apt_get(package)
   command echo_cmd "sudo apt-get install #{package} -y"

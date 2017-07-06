@@ -1,8 +1,8 @@
 require "mina/extras"
 
-set_default :nginx_conf_path, "/etc/nginx/sites-enabled"
-set_default :nginx_port, 80
-set_default :nginx_default, false
+set :nginx_conf_path, "/etc/nginx/sites-enabled"
+set :nginx_port, 80
+set :nginx_default, false
 
 namespace :nginx do
     

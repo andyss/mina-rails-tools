@@ -1,9 +1,9 @@
-set_default :god_path, "/etc/god"
-set_default :god_user, "root"
-set_default :god_group, "root"
-set_default :god_service_path, "/etc/init.d"
-set_default :god_pid_path, "/var/run"
-set_default :god_log_path, "/var/log"
+set :god_path, "/etc/god"
+set :god_user, "root"
+set :god_group, "root"
+set :god_service_path, "/etc/init.d"
+set :god_pid_path, "/var/run"
+set :god_log_path, "/var/log"
 
 set :use_god, true
 

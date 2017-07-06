@@ -1,6 +1,6 @@
 require "mina/extras"
 
-set_default :sudoer, "root"
+set :sudoer, "root"
 task :sudo do
   # set :user, sudoer
   set :sudo, true

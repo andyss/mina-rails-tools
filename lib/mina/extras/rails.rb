@@ -1,4 +1,4 @@
-set_default :log_line, 200
+set :log_line, 200
 
 desc "Rails Log"
 task :log => :environment do

@@ -1,5 +1,5 @@
-set_default :mysql_user, :root
-set_default :mysql_pass, true
+set :mysql_user, :root
+set :mysql_pass, true
 
 namespace :mysql do
   
