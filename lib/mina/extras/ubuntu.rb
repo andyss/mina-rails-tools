@@ -21,7 +21,7 @@ namespace :ubuntu do
   namespace :remote do
     task :setup do
       invoke :sudo
-      command echo_cmd %{mkdir -p ~/.ssh}
+      command %{mkdir -p ~/.ssh}
       append_template(ssh_pub_key_path, ".ssh/authorized_keys")
     end
 
@@ -30,31 +30,31 @@ namespace :ubuntu do
       add_user("deploy")
       command "sudo usermod -a -G www-data deploy"
 
-      command echo_cmd "sudo mkdir -p /home/deploy/.ssh"
-      command echo_cmd "sudo touch /home/deploy/.ssh/authorized_keys"
+      command "sudo mkdir -p /home/deploy/.ssh"
+      command "sudo touch /home/deploy/.ssh/authorized_keys"
       append_template(ssh_pub_key_path, "/home/deploy/.ssh/authorized_keys")
-      command echo_cmd "sudo chown -R deploy:deploy /home/deploy/.ssh"
-      command echo_cmd "sudo chmod 664 /home/deploy/.ssh/authorized_keys"
+      command "sudo chown -R deploy:deploy /home/deploy/.ssh"
+      command "sudo chmod 664 /home/deploy/.ssh/authorized_keys"
     end
 
     task :add_ubuntu do
       invoke :sudo
       add_user("ubuntu")
-      command echo_cmd "sudo groupadd admin"
-      command echo_cmd "sudo usermod -a -G admin ubuntu"
-      command echo_cmd "sudo mkdir -p /home/ubuntu/.ssh"
-      command echo_cmd "sudo touch /home/ubuntu/.ssh/authorized_keys"
+      command "sudo groupadd admin"
+      command "sudo usermod -a -G admin ubuntu"
+      command "sudo mkdir -p /home/ubuntu/.ssh"
+      command "sudo touch /home/ubuntu/.ssh/authorized_keys"
       append_template(ssh_pub_key_path, "/home/ubuntu/.ssh/authorized_keys")
-      command echo_cmd "sudo chown -R ubuntu:ubuntu /home/ubuntu/.ssh"
-      command echo_cmd "sudo chmod 664 /home/ubuntu/.ssh/authorized_keys"
+      command "sudo chown -R ubuntu:ubuntu /home/ubuntu/.ssh"
+      command "sudo chmod 664 /home/ubuntu/.ssh/authorized_keys"
     end
   end
 
   namespace :locale do
     task :setup do
       invoke :sudo
-      command echo_cmd %{sudo locale-gen en_US en_US.UTF8}
-      command echo_cmd %{sudo sh -c "echo 'LC_ALL=\"en_US.utf8\"' >> /etc/environment"}
+      command %{sudo locale-gen en_US en_US.UTF8}
+      command %{sudo sh -c "echo 'LC_ALL=\"en_US.utf8\"' >> /etc/environment"}
     end
   end
 
@@ -92,8 +92,8 @@ namespace :ubuntu do
 
     task :www do
       invoke :sudo
-      command echo_cmd "sudo mkdir -p /var/www"
-      command echo_cmd "sudo chown -R deploy:www-data /var/www"
+      command "sudo mkdir -p /var/www"
+      command "sudo chown -R deploy:www-data /var/www"
     end
 
     task :ssh_key do

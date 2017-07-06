@@ -7,5 +7,5 @@ task :uptime do
 end
 
 task :gp do
-  command echo_cmd "ps aux | grep #{ENV["p"]}"
+  command "ps aux | grep #{ENV["p"]}"
 end

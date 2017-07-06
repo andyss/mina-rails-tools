@@ -22,7 +22,7 @@ namespace :unicorn do
   desc "Unicron: startup"
   task :defaults do
     invoke :sudo
-    command echo_cmd "sudo update-rc.d unicorn-#{fetch(:app)} defaults"
+    command "sudo update-rc.d unicorn-#{fetch(:app)} defaults"
   end
 
   namespace :god do
@@ -32,18 +32,18 @@ namespace :unicorn do
 
     task :link do
       invoke :sudo
-      command echo_cmd %{sudo cp -rf #{deploy_to}/#{shared_path}/unicorn.god #{god_path}/conf/unicorn-#{fetch(:app)}.god}
+      command %{sudo cp -rf #{deploy_to}/#{shared_path}/unicorn.god #{god_path}/conf/unicorn-#{fetch(:app)}.god}
       invoke :"god:restart"
     end
 
     task :start do
       invoke :sudo
-      command echo_cmd %{sudo god start unicorn_#{fetch(:app)}}
+      command %{sudo god start unicorn_#{fetch(:app)}}
     end
 
     task :stop do
       invoke :sudo
-      command echo_cmd %{sudo god stop unicorn_#{fetch(:app)}}
+      command %{sudo god stop unicorn_#{fetch(:app)}}
     end
   end
 
@@ -59,28 +59,28 @@ namespace :unicorn do
   task :link do
     invoke :sudo
     extra_echo("Unicorn: Link script file")
-    command echo_cmd %{sudo cp '#{deploy_to}/shared/unicorn_init.sh' '/etc/init.d/unicorn-#{fetch(:app)}'}
-    command echo_cmd %{sudo chown #{user!}:#{group!} /etc/init.d/unicorn-#{fetch(:app)}}
-    command echo_cmd %{sudo chmod u+x /etc/init.d/unicorn-#{fetch(:app)}}
+    command %{sudo cp '#{deploy_to}/shared/unicorn_init.sh' '/etc/init.d/unicorn-#{fetch(:app)}'}
+    command %{sudo chown #{user!}:#{group!} /etc/init.d/unicorn-#{fetch(:app)}}
+    command %{sudo chmod u+x /etc/init.d/unicorn-#{fetch(:app)}}
     # invoke :"unicorn:defaults"
   end
 
   desc "Start unicorn"
   task :start do
     extra_echo("Unicorn: Start")
-    command echo_cmd "/etc/init.d/unicorn-#{fetch(:app)} start"
+    command "/etc/init.d/unicorn-#{fetch(:app)} start"
   end
 
   desc "Stop unicorn"
   task :stop do
     extra_echo("Unicorn: Stop")
-    command echo_cmd "/etc/init.d/unicorn-#{fetch(:app)} stop"
+    command "/etc/init.d/unicorn-#{fetch(:app)} stop"
   end
 
   desc "Restart unicorn using 'upgrade'"
   task :restart do
     extra_echo("Unicorn: Restart")
-    command echo_cmd "/etc/init.d/unicorn-#{fetch(:app)} upgrade"
+    command "/etc/init.d/unicorn-#{fetch(:app)} upgrade"
   end
 
 end

@@ -1,7 +1,7 @@
 set :apt_source, :us
 
 def apt_get(package)
-  command echo_cmd "sudo apt-get install #{package} -y"
+  command "sudo apt-get install #{package} -y"
 end
 
 namespace :apt do
