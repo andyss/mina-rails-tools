@@ -7,7 +7,7 @@ server {
   listen <%= nginx_port %><%= ' default' if nginx_default %>;
   server_name <%= domain %>;
 
-  root <%= deploy_to %>/<%= current_path %>/public;
+  root <%= fetch(:deploy_to) %>/<%= current_path %>/public;
   
   gzip on;
   gzip_types text/plain text/xml application/xml application/xml+rss

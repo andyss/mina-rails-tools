@@ -57,7 +57,7 @@ namespace :extra do
     end.uniq
 
     folders.map do |dir|
-      command %{mkdir -p "#{deploy_to}/shared/#{dir}"}
+      command %{mkdir -p "#{fetch(:deploy_to)}/shared/#{dir}"}
     end
   end
 

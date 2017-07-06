@@ -1,5 +1,5 @@
 def mv_config(source, destination)
-  command %{mv #{deploy_to}/shared/config/#{source} #{deploy_to}/shared/config/#{destination}}
+  command %{mv #{fetch(:deploy_to)}/shared/config/#{source} #{fetch(:deploy_to)}/shared/config/#{destination}}
 end
 
 def extra_echo(desc)
@@ -29,9 +29,9 @@ def upload_shared_file(filename)
   src = custom_conf_path(filename)
 
   if src
-    upload_template src, "#{deploy_to}/shared/#{filename}"
+    upload_template src, "#{fetch(:deploy_to)}/shared/#{filename}"
   else
-    upload_default_template filename, "#{deploy_to}/shared/#{filename}"
+    upload_default_template filename, "#{fetch(:deploy_to)}/shared/#{filename}"
   end
 end
 
@@ -119,7 +119,7 @@ def upload_shared_folder(folder, base)
     else
       filename = File.basename(path)
       shared_folder = path.gsub(base, "").gsub(filename, "").gsub(/\A\//, "").gsub(/\/\Z/, "")
-      des = "#{deploy_to}/shared/#{shared_folder}/#{filename.gsub(/\.erb$/, "")}"
+      des = "#{fetch(:deploy_to)}/shared/#{shared_folder}/#{filename.gsub(/\.erb$/, "")}"
       upload_template path, des
     end
   end

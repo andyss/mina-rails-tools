@@ -16,14 +16,14 @@ task :rollback => :environment do
   # remove latest release folder (active release)
   extra_echo("Deleting active release: ")
 
-  command %[ls "#{deploy_to}/releases" -Art | sort | tail -n 1]
-  command %[ls "#{deploy_to}/releases" -Art | sort | tail -n 1 | xargs -I active rm -rf "#{deploy_to}/releases/active"]
+  command %[ls "#{fetch(:deploy_to)}/releases" -Art | sort | tail -n 1]
+  command %[ls "#{fetch(:deploy_to)}/releases" -Art | sort | tail -n 1 | xargs -I active rm -rf "#{fetch(:deploy_to)}/releases/active"]
 
   # delete existing sym link and create a new symlink pointing to the previous release
   extra_echo("Creating new symlink from the previous release: ")
-  command %[ls "#{deploy_to}/releases" -Art | sort | tail -n 1]
-  command %[rm "#{deploy_to}/current"]
-  command %[ls -Art "#{deploy_to}/releases" | sort | tail -n 1 | xargs -I active ln -s "#{deploy_to}/releases/active" "#{deploy_to}/current"]
+  command %[ls "#{fetch(:deploy_to)}/releases" -Art | sort | tail -n 1]
+  command %[rm "#{fetch(:deploy_to)}/current"]
+  command %[ls -Art "#{fetch(:deploy_to)}/releases" | sort | tail -n 1 | xargs -I active ln -s "#{fetch(:deploy_to)}/releases/active" "#{fetch(:deploy_to)}/current"]
   
   invoke :'unicorn:restart'
 end

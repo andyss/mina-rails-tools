@@ -14,7 +14,7 @@ set :sudoer, "joey"
 
 set :keep_releases, 5
 set :domain, '192.168.11.107'
-set :deploy_to, "/var/www/test"
+set :fetch(:deploy_to), "/var/www/test"
 set :shared_paths, ["config/database.yml", "tmp", "log", "pids", "config/application.yml"]
 set :repository, "git@xxxx:test.git"
 # set :branch, "master"

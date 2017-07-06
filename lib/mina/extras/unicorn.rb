@@ -32,7 +32,7 @@ namespace :unicorn do
 
     task :link do
       invoke :sudo
-      command %{sudo cp -rf #{deploy_to}/#{shared_path}/unicorn.god #{god_path}/conf/unicorn-#{fetch(:app)}.god}
+      command %{sudo cp -rf #{fetch(:deploy_to)}/#{shared_path}/unicorn.god #{god_path}/conf/unicorn-#{fetch(:app)}.god}
       invoke :"god:restart"
     end
 
@@ -48,18 +48,18 @@ namespace :unicorn do
   end
 
   task :log do
-    command %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.log" -n 200}
+    command %{tail -f "#{fetch(:deploy_to)!}/#{shared_path}/log/unicorn.log" -n 200}
   end
 
   task :err_log do
-    command %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.error.log" -n 200}
+    command %{tail -f "#{fetch(:deploy_to)!}/#{shared_path}/log/unicorn.error.log" -n 200}
   end
 
   desc "Unicorn: Link script files"
   task :link do
     invoke :sudo
     extra_echo("Unicorn: Link script file")
-    command %{sudo cp '#{deploy_to}/shared/unicorn_init.sh' '/etc/init.d/unicorn-#{fetch(:app)}'}
+    command %{sudo cp '#{fetch(:deploy_to)}/shared/unicorn_init.sh' '/etc/init.d/unicorn-#{fetch(:app)}'}
     command %{sudo chown #{user!}:#{group!} /etc/init.d/unicorn-#{fetch(:app)}}
     command %{sudo chmod u+x /etc/init.d/unicorn-#{fetch(:app)}}
     # invoke :"unicorn:defaults"

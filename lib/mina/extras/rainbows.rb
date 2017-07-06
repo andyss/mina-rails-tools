@@ -26,18 +26,18 @@ namespace :rainbows do
   end
   
   task :log do
-    command %{tail -f "#{deploy_to!}/#{shared_path}/log/rainbows.log" -n 200}    
+    command %{tail -f "#{fetch(:deploy_to)!}/#{shared_path}/log/rainbows.log" -n 200}    
   end
   
   task :err_log do
-    command %{tail -f "#{deploy_to!}/#{shared_path}/log/rainbows.error.log" -n 200}    
+    command %{tail -f "#{fetch(:deploy_to)!}/#{shared_path}/log/rainbows.error.log" -n 200}    
   end
 
   desc "Rainbows: Link script files"
   task :link do
     invoke :sudo
     extra_echo("Rainbows: Link script file")
-    command %{sudo cp '#{deploy_to}/shared/config/rainbows_init.sh' '/etc/init.d/rainbows-#{fetch(:app)}'}
+    command %{sudo cp '#{fetch(:deploy_to)}/shared/config/rainbows_init.sh' '/etc/init.d/rainbows-#{fetch(:app)}'}
     
     invoke :"rainbows:defaults"
   end
