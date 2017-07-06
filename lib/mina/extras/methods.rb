@@ -157,7 +157,7 @@ def check_symlink(destination)
 end
 
 def custom_conf?(conf)
-  Dir[File.join(Dir.pwd, "config", "deploy", "#{server}", "*")].map do |file|
+  Dir[File.join(Dir.pwd, "config", "deploy", "#{fetch(:server)}", "*")].map do |file|
     filename = File.basename(file)
     if filename.gsub(/.erb\Z/, "") == conf.to_s
       return true
@@ -168,7 +168,7 @@ def custom_conf?(conf)
 end
 
 def custom_conf_path(conf)
-  Dir[File.join(Dir.pwd, "config", "deploy", "#{server}", "*")].map do |file|
+  Dir[File.join(Dir.pwd, "config", "deploy", "#{fetch(:server)}", "*")].map do |file|
     filename = File.basename(file)
     if filename.gsub(/.erb\Z/, "") == conf.to_s
       return file

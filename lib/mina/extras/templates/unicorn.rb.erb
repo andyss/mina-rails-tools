@@ -1,13 +1,13 @@
-rails_root = "<%= "#{fetch(:deploy_to)}/#{current_path!}" %>"
-rails_env  = "<%= rails_env || "production" %>"
-pid_file   = "<%= "#{fetch(:deploy_to)}/#{shared_path}" %>/pids/unicorn.pid"
+rails_root = "<%= "#{fetch(:deploy_to)}/current" %>"
+rails_env  = "<%= fetch(:rails_env) || "production" %>"
+pid_file   = "<%= "#{fetch(:deploy_to)}/shared" %>/pids/unicorn.pid"
 socket_file= "/tmp/unicorn.<%= fetch(:app) %>.socket"
-log_file   = "<%= "#{fetch(:deploy_to)}/#{shared_path}" %>/log/unicorn.log"
-err_log    = "<%= "#{fetch(:deploy_to)}/#{shared_path}" %>/log/unicorn.error.log"
+log_file   = "<%= "#{fetch(:deploy_to)}/shared" %>/log/unicorn.log"
+err_log    = "<%= "#{fetch(:deploy_to)}/shared" %>/log/unicorn.error.log"
 old_pid    = pid_file + '.oldbin'
 
 timeout 60
-worker_processes <%= unicorn_workers || 2 %>
+worker_processes <%= fetch(:unicorn_workers) || 2 %>
 
 # Listen on a Unix data socket
 listen socket_file, :backlog => 2048

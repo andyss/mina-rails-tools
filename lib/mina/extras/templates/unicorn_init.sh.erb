@@ -4,12 +4,12 @@ set -e
 AS_USER=deploy
 TIMEOUT=60
 APP_ROOT="<%= "#{fetch(:deploy_to)}" %>"
-PID_PATH="<%= "#{fetch(:deploy_to)}/#{shared_path!}/pids" %>"
+PID_PATH="<%= "#{fetch(:deploy_to)}/shared/pids" %>"
 PID="$PID_PATH/unicorn.pid"
 ENVIRONMENT="<%= fetch(:rails_env) || "production" %>"
-CONFIG="$APP_ROOT/<%= "#{shared_path!}/unicorn.rb" %>"
+CONFIG="$APP_ROOT/shared/unicorn.rb"
 UARGS="-D -c $CONFIG -E $ENVIRONMENT"
-CMD="cd $APP_ROOT/<%= current_path! %> && bundle exec unicorn_rails $UARGS"
+CMD="cd $APP_ROOT/current && bundle exec unicorn_rails $UARGS"
 action="$1"
 #set -u
 

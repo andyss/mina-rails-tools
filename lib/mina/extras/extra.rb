@@ -4,13 +4,11 @@ set :sudoer, "root"
 task :sudo do
   # set :user, sudoer
   set :sudo, true
-  # set :term_mode, :system
 end
 
 task :user do
   # set :user, user
   set :sudo, false
-  # set :term_mode, :system
 end
 
 task :setup => :environment  do
@@ -19,10 +17,10 @@ task :setup => :environment  do
 
   invoke :"nginx:upload"
 
-  if use_unicorn
+  if fetch(:use_unicorn)
     invoke :'unicorn:upload'
 
-    if use_god
+    if fetch(:use_god)
       invoke :'unicorn:god:upload'
     end
   end
@@ -41,10 +39,10 @@ task :sudoer_setup do
   invoke :'nginx:link'
   invoke :'nginx:restart'
 
-  if use_unicorn
+  if fetch(:use_unicorn)
     invoke :'unicorn:link'
 
-    if use_god
+    if fetch(:use_god)
       invoke :'unicorn:god:link'
     end
   end
@@ -52,12 +50,14 @@ end
 
 namespace :extra do
   task :create_shared_paths do
-    folders = shared_paths.map do |path|
-      path.gsub(/\/\S+\.\S+\Z/, "")
-    end.uniq
+    if fetch(:shared_paths)
+      folders = fetch(:shared_paths).map do |path|
+        path.gsub(/\/\S+\.\S+\Z/, "")
+      end.uniq
 
-    folders.map do |dir|
-      command %{mkdir -p "#{fetch(:deploy_to)}/shared/#{dir}"}
+      folders.map do |dir|
+        command %{mkdir -p "#{fetch(:deploy_to)}/shared/#{dir}"}
+      end
     end
   end
 
@@ -71,7 +71,7 @@ namespace :extra do
       upload_shared_folder(path, base)
     end
 
-    base = File.join(Dir.pwd, "config", "deploy", "#{server}")
+    base = File.join(Dir.pwd, "config", "deploy", "#{fetch(:server)}")
 
     Dir[File.join(base, "*")].map do |path|
       # File.directory?
@@ -88,7 +88,7 @@ module Mina
   module SshHelpers
     def ssh_command
       args = domain!
-      args = if settings[:sudo] && sudoer?
+      args = if settings[:sudo] && fetch(:sudoer)
                "#{sudoer}@#{args}"
              elsif user?
                "#{user}@#{args}"
@@ -97,6 +97,32 @@ module Mina
       args << " -p #{port}" if port?
       args << " -t"
       "ssh #{args}"
+    end
+  end
+end
+
+
+module Mina
+  module Backend
+    class Remote
+
+      def ssh
+        ensure!(:domain)
+        args = fetch(:domain)
+        p fetch(:sudo), fetch(:sudoer)
+        if fetch(:sudo) && fetch(:sudoer)
+          args = "#{fetch(:sudoer)}@#{fetch(:domain)}" if set?(:user)
+        else
+          args = "#{fetch(:user)}@#{fetch(:domain)}" if set?(:user)
+        end
+        args += " -i #{fetch(:identity_file)}" if set?(:identity_file)
+        args += " -p #{fetch(:port)}" if set?(:port)
+        args += ' -A' if set?(:forward_agent)
+        args += " #{fetch(:ssh_options)}" if set?(:ssh_options)
+        args += ' -tt'
+        "ssh #{args}"
+      end
+
     end
   end
 end
