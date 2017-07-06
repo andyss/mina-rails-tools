@@ -26,11 +26,11 @@ namespace :rainbows do
   end
   
   task :log do
-    command %{tail -f "#{fetch(:deploy_to)!}/#{shared_path}/log/rainbows.log" -n 200}    
+    command %{tail -f "#{fetch(:deploy_to)}/#{shared_path}/log/rainbows.log" -n 200}    
   end
   
   task :err_log do
-    command %{tail -f "#{fetch(:deploy_to)!}/#{shared_path}/log/rainbows.error.log" -n 200}    
+    command %{tail -f "#{fetch(:deploy_to)}/#{shared_path}/log/rainbows.error.log" -n 200}    
   end
 
   desc "Rainbows: Link script files"

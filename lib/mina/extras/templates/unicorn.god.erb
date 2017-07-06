@@ -1,12 +1,12 @@
 # http://unicorn.bogomips.org/SIGNALS.html
 
 rails_env = "production"
-rails_root = "<%= "#{fetch(:deploy_to)!}/#{current_path!}" %>"
-shared_root = "<%= "#{fetch(:deploy_to)!}/#{shared_path!}" %>"
+rails_root = "<%= "#{fetch(:deploy_to)}/#{current_path!}" %>"
+shared_root = "<%= "#{fetch(:deploy_to)}/#{shared_path!}" %>"
 config = "#{shared_root}/unicorn.rb"
-unicorn_pid = "<%= "#{fetch(:deploy_to)!}/#{shared_path!}/pids/unicorn.pid" %>"
+unicorn_pid = "<%= "#{fetch(:deploy_to)}/#{shared_path!}/pids/unicorn.pid" %>"
 
-# God.pid_file_directory = File.join("<%= fetch(:deploy_to)! %>", "shared", "pids")
+# God.pid_file_directory = File.join("<%= fetch(:deploy_to) %>", "shared", "pids")
 God.watch do |w|
   w.name = "unicorn_<%= "#{fetch(:app)}" %>"
   w.interval = 30.seconds # default

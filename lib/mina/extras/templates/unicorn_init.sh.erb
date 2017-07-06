@@ -3,8 +3,8 @@ set -e
 
 AS_USER=deploy
 TIMEOUT=60
-APP_ROOT="<%= "#{fetch(:deploy_to)!}" %>"
-PID_PATH="<%= "#{fetch(:deploy_to)!}/#{shared_path!}/pids" %>"
+APP_ROOT="<%= "#{fetch(:deploy_to)}" %>"
+PID_PATH="<%= "#{fetch(:deploy_to)}/#{shared_path!}/pids" %>"
 PID="$PID_PATH/unicorn.pid"
 ENVIRONMENT="<%= rails_env || "production" %>"
 CONFIG="$APP_ROOT/<%= "#{shared_path!}/unicorn.rb" %>"

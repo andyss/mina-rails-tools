@@ -48,11 +48,11 @@ namespace :unicorn do
   end
 
   task :log do
-    command %{tail -f "#{fetch(:deploy_to)!}/#{shared_path}/log/unicorn.log" -n 200}
+    command %{tail -f "#{fetch(:deploy_to)}/#{shared_path}/log/unicorn.log" -n 200}
   end
 
   task :err_log do
-    command %{tail -f "#{fetch(:deploy_to)!}/#{shared_path}/log/unicorn.error.log" -n 200}
+    command %{tail -f "#{fetch(:deploy_to)}/#{shared_path}/log/unicorn.error.log" -n 200}
   end
 
   desc "Unicorn: Link script files"
