@@ -22,7 +22,7 @@ namespace :unicorn do
   desc "Unicron: startup"
   task :defaults do
     invoke :sudo
-    queue echo_cmd "sudo update-rc.d unicorn-#{app!} defaults"
+    command echo_cmd "sudo update-rc.d unicorn-#{app!} defaults"
   end
   
   namespace :god do
@@ -32,55 +32,55 @@ namespace :unicorn do
     
     task :link do
       invoke :sudo
-      queue echo_cmd %{sudo cp -rf #{deploy_to}/#{shared_path}/unicorn.god #{god_path}/conf/unicorn-#{app!}.god}
+      command echo_cmd %{sudo cp -rf #{deploy_to}/#{shared_path}/unicorn.god #{god_path}/conf/unicorn-#{app!}.god}
       invoke :"god:restart"
     end
     
     task :start do
       invoke :sudo
-      queue echo_cmd %{sudo god start unicorn_#{app!}}
+      command echo_cmd %{sudo god start unicorn_#{app!}}
     end
     
     task :stop do
       invoke :sudo
-      queue echo_cmd %{sudo god stop unicorn_#{app!}}
+      command echo_cmd %{sudo god stop unicorn_#{app!}}
     end    
   end
   
   task :log do
-    queue %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.log" -n 200}    
+    command %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.log" -n 200}    
   end
   
   task :err_log do
-    queue %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.error.log" -n 200}    
+    command %{tail -f "#{deploy_to!}/#{shared_path}/log/unicorn.error.log" -n 200}    
   end
 
   desc "Unicorn: Link script files"
   task :link do
     invoke :sudo
     extra_echo("Unicorn: Link script file")
-    queue echo_cmd %{sudo cp '#{deploy_to}/shared/unicorn_init.sh' '/etc/init.d/unicorn-#{app!}'}
-    queue echo_cmd %{sudo chown #{user!}:#{group!} /etc/init.d/unicorn-#{app!}}
-    queue echo_cmd %{sudo chmod u+x /etc/init.d/unicorn-#{app!}}
+    command echo_cmd %{sudo cp '#{deploy_to}/shared/unicorn_init.sh' '/etc/init.d/unicorn-#{app!}'}
+    command echo_cmd %{sudo chown #{user!}:#{group!} /etc/init.d/unicorn-#{app!}}
+    command echo_cmd %{sudo chmod u+x /etc/init.d/unicorn-#{app!}}
     # invoke :"unicorn:defaults"
   end
 
   desc "Start unicorn"
   task :start do
     extra_echo("Unicorn: Start")
-    queue echo_cmd "/etc/init.d/unicorn-#{app!} start"
+    command echo_cmd "/etc/init.d/unicorn-#{app!} start"
   end
 
   desc "Stop unicorn"
   task :stop do
     extra_echo("Unicorn: Stop")
-    queue echo_cmd "/etc/init.d/unicorn-#{app!} stop"
+    command echo_cmd "/etc/init.d/unicorn-#{app!} stop"
   end
 
   desc "Restart unicorn using 'upgrade'"
   task :restart do
     extra_echo("Unicorn: Restart")
-    queue echo_cmd "/etc/init.d/unicorn-#{app!} upgrade"
+    command echo_cmd "/etc/init.d/unicorn-#{app!} upgrade"
   end
 
 end

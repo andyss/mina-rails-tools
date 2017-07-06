@@ -1,17 +1,17 @@
 def mv_config(source, destination)
-  queue %{mv #{deploy_to}/shared/config/#{source} #{deploy_to}/shared/config/#{destination}}
+  command %{mv #{deploy_to}/shared/config/#{source} #{deploy_to}/shared/config/#{destination}}
 end
 
 def extra_echo(desc)
-  queue "echo '--------> #{desc}'"
+  command "echo '--------> #{desc}'"
 end
 
 def extra_echo!(desc)
-  queue! "echo '--------> #{desc}'"
+  command "echo '--------> #{desc}'"
 end
 
 def scp_file(desc, source, destination)
-  to :after_hook do
+  on :after_hook do
     extra_echo("Put #{desc} file to #{destination}")
 
     command = "scp "
@@ -27,7 +27,7 @@ end
 
 def upload_shared_file(filename)
   src = custom_conf_path(filename)
-  
+
   if src
     upload_template src, "#{deploy_to}/shared/#{filename}"
   else
@@ -37,7 +37,7 @@ end
 
 def upload_file(filename, destination)
   src = custom_conf_path(filename)
-  
+
   if src
     upload_template src, destination
   else
@@ -47,15 +47,15 @@ end
 
 def append_template(source, destination)
   desc = File.basename(destination)
-  
+
   if source =~ /erb$/
     contents = parse_template(source)
   else
     contents = File.read(source)
   end
-  
+
   extra_echo("Put #{desc} file to #{destination}")
-  
+
   script = <<EOF
 script=$(cat <<'EOFF'
 #{contents}
@@ -63,22 +63,22 @@ EOFF
 )
 EOF
 
-  queue %{#{script}}
-  queue %{echo "$script" >> #{destination}}
-  queue check_exists(destination)
+  command %{#{script}}
+  command %{echo "$script" >> #{destination}}
+  command check_exists(destination)
 end
 
 def upload_template(source, destination)
   desc = File.basename(destination)
-  
+
   if source =~ /erb$/
     contents = parse_template(source)
   else
     contents = parse_template(source)
   end
-  
+
   extra_echo("Put #{desc} file to #{destination}")
-  
+
   script = <<EOF
 script=$(cat <<'EOFF'
 #{contents}
@@ -86,20 +86,20 @@ EOFF
 )
 EOF
 
-  queue %{#{script}}
-  queue %{echo "$script" > #{destination}}
-  queue check_exists(destination)
+  command %{#{script}}
+  command %{echo "$script" > #{destination}}
+  command check_exists(destination)
 end
 
 def upload_default_template(tpl, destination)
   desc = File.basename(destination)
-  
+
   source = File.join(File.dirname(__FILE__), "templates", "#{tpl}.erb")
-  
+
   contents = parse_template(source)
-  
+
   extra_echo("Put #{desc} file to #{destination}")
-  
+
   script = <<EOF
 script=$(cat <<'EOFF'
 #{contents}
@@ -107,23 +107,23 @@ EOFF
 )
 EOF
 
-  queue %{#{script}}
-  queue %{echo "$script" > #{destination}}
-  queue check_exists(destination)
+  command %{#{script}}
+  command %{echo "$script" > #{destination}}
+  command check_exists(destination)
 end
 
 def upload_shared_folder(folder, base)
-  Dir[File.join(folder, "*")].map do |path|    
+  Dir[File.join(folder, "*")].map do |path|
     if File.directory?(path)
       upload_shared_folder(path)
     else
       filename = File.basename(path)
       shared_folder = path.gsub(base, "").gsub(filename, "").gsub(/\A\//, "").gsub(/\/\Z/, "")
       des = "#{deploy_to}/shared/#{shared_folder}/#{filename.gsub(/\.erb$/, "")}"
-      upload_template path, des      
+      upload_template path, des
     end
   end
-  
+
 end
 
 def parse_template(file)
@@ -163,7 +163,7 @@ def custom_conf?(conf)
       return true
     end
   end
-  
+
   false
 end
 
@@ -174,19 +174,19 @@ def custom_conf_path(conf)
       return file
     end
   end
-  
+
   Dir[File.join(Dir.pwd, "config", "deploy", "shared", "*")].map do |file|
     filename = File.basename(file)
     if filename.gsub(/.erb\Z/, "") == conf.to_s
       return file
     end
   end
-  
+
   false
 end
 
-def queue_echo(s)
-  queue %{echo '#{s}'}
+def command_echo(s)
+  command %{echo '#{s}'}
 end
 
 def check_file_exist?(file)

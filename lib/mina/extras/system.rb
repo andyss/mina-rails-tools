@@ -1,11 +1,11 @@
 task :health do
-  queue 'ps aux | grep -v grep | grep -v bash | grep -e "bin\/god" -e "unicorn_rails" -e "mongod" -e "nginx" -e "redis" -e "STAT START   TIME COMMAND" -e "bash"'
+  command 'ps aux | grep -v grep | grep -v bash | grep -e "bin\/god" -e "unicorn_rails" -e "mongod" -e "nginx" -e "redis" -e "STAT START   TIME COMMAND" -e "bash"'
 end
 
 task :uptime do
-  queue 'uptime'
+  command 'uptime'
 end
 
 task :gp do
-  queue echo_cmd "ps aux | grep #{ENV["p"]}"
+  command echo_cmd "ps aux | grep #{ENV["p"]}"
 end

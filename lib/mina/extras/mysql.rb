@@ -6,7 +6,7 @@ namespace :mysql do
   desc "Connect to mysql"
   task :connect do
     extra_echo "Mysql: connect"
-    queue "mysql -u #{mysql_user} #{mysql_pass ? "-p" : ""}"
+    command "mysql -u #{mysql_user} #{mysql_pass ? "-p" : ""}"
   end
     
 end

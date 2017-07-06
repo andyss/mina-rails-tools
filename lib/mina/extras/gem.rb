@@ -1,5 +1,5 @@
 def gem_install(package, options=nil)
-  queue echo_cmd "sudo gem install #{package} #{options} --no-rdoc --no-ri"
+  command echo_cmd "sudo gem install #{package} #{options} --no-rdoc --no-ri"
 end
 
 namespace :gem do
@@ -11,13 +11,13 @@ namespace :gem do
   namespace :source do
     task :prepare do
       if in_china?
-        queue echo_cmd "sudo gem source -a http://ruby.taobao.org/"
-        queue echo_cmd "sudo gem source -r https://rubygems.org/"
+        command echo_cmd "sudo gem source -a http://ruby.taobao.org/"
+        command echo_cmd "sudo gem source -r https://rubygems.org/"
       end
     end
     
     task :list do
-      queue echo_cmd "sudo gem source"
+      command echo_cmd "sudo gem source"
     end
   end
   

@@ -16,7 +16,7 @@ set :ssh_key_path, "/Users/joey/.ssh/id_rsa"
 
 task :start do
   invoke :sudo
-  queue "whoami"
+  command "whoami"
   invoke :"ubuntu:before_check"
   invoke :"ubuntu:remote:setup"
   invoke :"ubuntu:locale:setup"
@@ -28,7 +28,7 @@ task :start do
   clean_commands!
   
   invoke :user
-  queue "whoami"
+  command "whoami"
   invoke :"apt:get:mysql"
   invoke :"apt:get:redis"
   invoke :"apt:get:nginx"

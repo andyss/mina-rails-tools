@@ -16,7 +16,7 @@ set :ssh_key_path, "/Users/joey/.ssh/id_rsa"
 
 task :start do
   invoke :sudo
-  queue "whoami"
+  command "whoami"
   invoke :"osx:before_check"
   invoke :"osx:remote:setup"
   invoke :"osx:locale:setup"
@@ -26,7 +26,7 @@ task :start do
   clean_commands!
   
   invoke :user
-  queue "whoami"
+  command "whoami"
   invoke :"brew:install:mysql"
   invoke :"brew:install:redis"
   invoke :"brew:install:nginx"

@@ -6,7 +6,7 @@ namespace :local do
     check_key = check_file_exist?(ssh_pub_key_path!) && check_file_exist?(ssh_key_path!)
 
     unless check_key
-      queue "ssh-keygen -t rsa"
+      command "ssh-keygen -t rsa"
     end 
   end
 end

@@ -27,10 +27,10 @@ task :setup => :environment  do
     end
   end
   
-  queue %{echo "-----> (!!!) You now need to run 'mina sudoer_setup' to run the parts that require sudoer user (!!!)"}
+  command %{echo "-----> (!!!) You now need to run 'mina sudoer_setup' to run the parts that require sudoer user (!!!)"}
   
   # if sudoer?
-  #   queue %{echo "-----> (!!!) You now need to run 'mina sudoer_setup' to run the parts that require sudoer user (!!!)"}
+  #   command %{echo "-----> (!!!) You now need to run 'mina sudoer_setup' to run the parts that require sudoer user (!!!)"}
   # else
   #   invoke :sudoer_setup
   # end
@@ -57,7 +57,7 @@ namespace :extra do
     end.uniq
     
     folders.map do |dir|
-      queue echo_cmd %{mkdir -p "#{deploy_to}/shared/#{dir}"}
+      command echo_cmd %{mkdir -p "#{deploy_to}/shared/#{dir}"}
     end
   end
   
