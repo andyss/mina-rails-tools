@@ -109,7 +109,6 @@ module Mina
       def ssh
         ensure!(:domain)
         args = fetch(:domain)
-        p fetch(:sudo), fetch(:sudoer)
         if fetch(:sudo) && fetch(:sudoer)
           args = "#{fetch(:sudoer)}@#{fetch(:domain)}" if set?(:user)
         else

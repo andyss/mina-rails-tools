@@ -1,4 +1,4 @@
-upstream unicorn-<%= app %> {
+upstream unicorn-<%= fetch(:app) %> {
   server unix:/tmp/unicorn.<%= fetch(:app) %>.socket fail_timeout=0;
 }
 
